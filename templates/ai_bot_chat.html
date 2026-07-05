@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/ai_bot_chat.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="left-panel">
+        <h2>🌱 Welcome to <strong>PlantPal! </strong></h2>
+        <!-- Plant Selection Info -->
+        <div class="plant-info">
+            <p style="font-size: 14px;">
+            I am your <strong>AI gardening assistant </strong>. I can help you with:
+            <ul>
+                <li>Plant care advice and tips</li>
+                <li>Watering and fertilizing schedules </li>
+                <li>Disease and pest identification </li>
+                <li>General gardening questions </li>
+            </ul>
+            <strong>💡 Tip: </strong> Add some plants to your dashboard first for personalized care advice!</p>
+        </div>
+
+    </div>
+
+    <div class="right-panel">
+        <!-- WhatsApp-style header -->
+        <div class="chat-header">
+            <div class="bot-avatar">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <div class="bot-info">
+                <h3>PlantPal AI (GPT-4o-mini)</h3>
+                <p>🌿 Your gardening assistant</p>
+            </div>
+        </div>
+
+        <div class="chat-window" id="chat-window">
+            {% for message in chat_history %}
+            <div class="chat-row {{ 'user' if message.is_user else 'bot' }}">
+                {% if not message.is_user %}
+                <span class="chat-avatar">
+                    <i class="fas fa-seedling"></i>
+                </span>
+                {% endif %}
+                <div class="chat-bubble {{ 'user-bubble' if message.is_user else 'bot-bubble' }}">
+                    {{ message.text | safe }}
+                    <div class="message-time">
+                        {{ message.timestamp if message.timestamp else 'Now' }}
+                    </div>
+                </div>
+                {% if message.is_user %}
+                <span class="chat-avatar user-avatar">
+                    <i class="fas fa-user"></i>
+                </span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <form class="chat-input-area" method="POST" action="/ai_chat" id="chat-form" enctype="multipart/form-data">
+            <div class="input-section">
+                <!-- Photo Upload Section -->
+                <div class="photo-upload-section" id="photoUploadSection" style="display: none;">
+                    <input type="file" name="photo_file" id="photoInput" accept="image/*" style="display: none;">
+                    <input type="hidden" name="plant_id" id="plantIdInput">
+                    <div class="photo-preview" id="photoPreview"></div>
+                    <div class="photo-options">
+                        <label for="plantSelect">Plant *:</label>
+                        <select id="plantSelect" name="plant_id">
+                            <option value="">Select a plant...</option>
+                            {% for plant in user_plants %}
+                            <option value="{{ plant.id }}">{{ plant.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text Input -->
+                <div class="text-input-container">
+                    <textarea name="user_message" placeholder="Type a message or upload a photo for analysis..."
+                              autocomplete="off"></textarea>
+
+                    <!-- Input Actions -->
+                    <div class="input-actions">
+                        <button type="submit" id="send-button">
+                            <i class="fa-solid fa-arrow-up" id="send-icon"></i>
+            
+                            <div class="spinner" id="spinner"></div>
+                        </button>
+                        <button type="button" id="photoBtn" class="action-btn" title="Upload Photo">
+                            <i class="fas fa-camera"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block jsfile %}
+<script src="/static/js/ai_bot_chat.js"></script>
+{% endblock jsfile %}

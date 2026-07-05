@@ -1,0 +1,14 @@
+.venv
+__pycache__/
+.idea
+.env
+.DS_Store
+.vscode
+static/gallery/
+alembic/versions/
+logs
+htmlcov
+tests
+vector_db
+.coverage
+.cursorignore

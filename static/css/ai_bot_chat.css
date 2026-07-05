@@ -1,0 +1,483 @@
+.container {
+    display: flex !important;
+    height: 85vh !important;
+    margin: auto !important;
+    width: 90vw !important;
+    max-width: 90vw !important;
+    border-radius: 5px !important;
+    background: white !important;
+    box-sizing: border-box !important;
+    font-size: 14px !important;
+}
+
+.left-panel {
+    width: 25% !important;
+    flex: 0 0 25% !important;
+    padding: 1rem 2rem !important;
+    border-radius: 5px 0 0 5px !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+.right-panel {
+    width: 70% !important;
+    flex: 1 1 70% !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    background: transparent;
+}
+
+/* WhatsApp-style chat header */
+.chat-header {
+    background: #3b702b !important;
+    color: white !important;
+    padding: 1rem 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    border-radius: 0 5px 0 0 !important;
+}
+
+.chat-header .bot-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    background: white !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #4a7c37 !important;
+}
+
+.chat-header .bot-info h3 {
+    margin: 0 !important;
+    color: white !important;
+}
+
+.chat-header .bot-info p {
+    margin: 0 !important;
+    opacity: 0.9 !important;
+}
+
+.chat-window {
+    flex: 1 !important;
+    padding: 1rem !important;
+    overflow-y: auto !important;
+    background: #c5ebba !important;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') !important;
+}
+
+chat-input-area {
+    padding: 1rem !important;
+    background: white !important;
+    border-top: 1px solid #e9ecef !important;
+}
+.input-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+}
+
+.text-input-container {
+    display: flex !important;
+    gap: 0.5rem !important;
+    align-items: flex-end !important;
+}
+
+/* Photo upload section styles (NEW) */
+.photo-upload-section {
+    background: #f8f9fa !important;
+    border: 2px dashed #4a7c37 !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+}
+
+.photo-upload-section.dragover {
+    background: #e8f5e8 !important;
+    border-color: #2f5233 !important;
+}
+
+.photo-preview {
+    margin: 1rem 0 !important;
+}
+
+.photo-preview img {
+    max-width: 200px !important;
+    max-height: 200px !important;
+    border-radius: 10px !important;
+    border: 2px solid #4a7c37 !important;
+}
+
+.photo-options {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    margin-top: 1rem !important;
+    text-align: left !important;
+}
+
+.photo-options label {
+    font-weight: 600 !important;
+    color: #2f5233 !important;
+}
+
+.photo-options select {
+    padding: 0.5rem !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 5px !important;
+    background: white !important;
+}
+
+.input-actions {
+    display: flex !important;
+    gap: 0.5rem !important;
+    flex-shrink: 0 !important;
+}
+
+.action-btn {
+    padding: 0.8rem !important;
+    background: #6c757d !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 45px !important;
+    height: 45px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.action-btn:hover {
+    background: #5a6268 !important;
+}
+
+.action-btn.active {
+    background: #4a7c37 !important;
+}
+
+.action-btn.active:hover {
+    background: #2f5233 !important;
+}
+
+/* More specific textarea selectors to override conflicts */
+.chat-input-area textarea,
+.chat-input-area textarea[name="user_message"]:focus {
+    flex: 1 !important;
+    padding: 0.8rem 1.2rem !important;
+    transition: border-color 0.3s !important;
+    background: #e3fde5 !important;
+    min-height: 3rem !important;
+    max-height: 120px !important;
+    resize: none !important;
+    line-height: 1.4 !important;
+    font-family: inherit !important;
+    overflow-y: auto !important;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    outline: none !important;
+    border: 1px solid #c2f2af !important;
+}
+
+
+.chat-input-area button {
+    padding: 0.6rem 1rem !important;
+    border: none !important;
+    border-radius: 20% !important;
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 0.6rem;
+}
+
+.chat-input-area #send-button {
+    background: #e3fde5 !important;
+    color: #4a7c37 !important;
+    border: 1px solid #8fdd70 !important;
+}
+
+.chat-input-area #photoBtn {
+    margin-right: 0.5rem;
+    background: #4a7c37 !important;
+    color: white !important;
+}
+
+.chat-input-area button:hover {
+    background: #2f5233 !important;
+}
+
+.chat-input-area button:disabled {
+    background: #ccc !important;
+    cursor: not-allowed !important;
+
+}
+
+.chat-row {
+    display: flex !important;
+    align-items: flex-end !important;
+    margin-bottom: 0.5rem !important;
+    gap: 0.5rem !important;
+}
+
+.chat-row.user {
+    flex-direction: row-reverse !important;
+}
+
+.chat-bubble {
+    width: 90% !important;
+    padding: 0.8rem 1rem !important;
+    border-radius: 18px !important;
+    line-height: 1.4 !important;
+    position: relative !important;
+    word-wrap: break-word !important;
+    font-size: 13px !important;
+}
+
+.user-bubble {
+    background: #dcf8c6 !important;
+    color: #000 !important;
+    border-bottom-right-radius: 4px !important;
+    margin-left: auto !important;
+    font-size: 13px !important;
+}
+
+.bot-bubble {
+    background: white !important;
+    color: #000 !important;
+    border-bottom-left-radius: 4px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+    font-size: 13px !important;
+}
+
+.message-time {
+    font-size: 11px !important;
+    color: #999 !important;
+    margin-top: 0.2rem !important;
+    text-align: right !important;
+}
+
+.user-bubble .message-time {
+    text-align: right !important;
+}
+
+.bot-bubble .message-time {
+    text-align: left !important;
+}
+
+/* Force all nested elements to inherit 12px */
+.chat-bubble p {
+    margin: 0.5rem 0 !important;
+    font-size: 13px !important;
+}
+
+.chat-bubble p:first-child {
+    margin-top: 0 !important;
+}
+
+.chat-bubble p:last-child {
+    margin-bottom: 0 !important;
+}
+
+.chat-bubble strong {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.chat-bubble em {
+    font-size: 13px !important;
+}
+
+.chat-bubble ol {
+    list-style-type: decimal !important;
+    margin: 0.5rem 0 !important;
+    padding-left: 1.5rem !important;
+    font-size: 13px !important;
+}
+
+.chat-bubble ul {
+    list-style-type: disc !important;
+    margin: 0.5rem 0 !important;
+    padding-left: 1.5rem !important;
+    font-size: 13px !important;
+}
+
+.chat-bubble li {
+    margin: 0.25rem 0 !important;
+    display: list-item !important;
+    font-size: 13px !important;
+}
+
+.chat-bubble h1,
+.chat-bubble h2,
+.chat-bubble h3,
+.chat-bubble h4,
+.chat-bubble h5,
+.chat-bubble h6 {
+    font-size: 14px !important;  /* Slightly larger headers but still small */
+    margin: 0.5rem 0 !important;
+}
+
+.chat-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    background: #4a7c37 !important;
+    color: white !important;
+}
+
+.user-avatar {
+    background: #25d366 !important;
+}
+
+.welcome-message {
+    text-align: center !important;
+    color: #666 !important;
+    font-style: italic !important;
+    margin-bottom: 2rem !important;
+}
+
+.plant-info {
+    background: #e8f5e8 !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+    border-left: 4px solid #4a7c37 !important;
+}
+
+.plant-info h4 {
+    color: #2f5233 !important;
+    margin: 0 0 0.5rem 0 !important;
+}
+
+.plant-info p {
+    margin: 0.25rem 0 !important;
+    color: #555 !important;
+}
+
+/* Typing indicator */
+.typing-indicator {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.8rem 1rem !important;
+    background: white !important;
+    border-radius: 18px !important;
+    border-bottom-left-radius: 4px !important;
+    max-width: 65% !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 13px !important;
+}
+
+.typing-text {
+    color: #666 !important;
+    font-style: italic !important;
+    font-size: 13px !important;
+}
+
+.typing-dots {
+    display: flex !important;
+    gap: 0.2rem !important;
+}
+
+.typing-dot {
+    width: 6px !important;
+    height: 6px !important;
+    background: #999 !important;
+    border-radius: 50% !important;
+    animation: typing 1.4s infinite ease-in-out !important;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s !important; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s !important; }
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Loading spinner for button */
+.spinner {
+    width: 16px !important;
+    height: 16px !important;
+    border: 2px solid #ffffff !important;
+    border-top: 2px solid transparent !important;
+    border-radius: 50% !important;
+    animation: spin 1s linear infinite !important;
+    display: none !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Simplified list styling for bot messages */
+.bot-bubble ol {
+    list-style-type: decimal !important;
+    margin: 0.5rem 0 !important;
+    padding-left: 1.5rem !important;
+}
+
+.bot-bubble ul {
+    list-style-type: disc !important;
+    margin: 0.5rem 0 !important;
+    padding-left: 1.5rem !important;
+}
+
+.bot-bubble li {
+    margin: 0.25rem 0 !important;
+    display: list-item !important;
+}
+
+.bot-bubble p {
+    margin: 0.5rem 0 !important;
+}
+
+.bot-bubble p:first-child {
+    margin-top: 0 !important;
+}
+
+.bot-bubble p:last-child {
+    margin-bottom: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column !important;
+        height: 90vh !important;
+        padding: 0.5rem 1rem !important;
+        margin: 0.25rem auto 0 auto !important;
+        width: 90vw !important;
+        max-width: 90vw !important;
+        border: 2px solid #276749 !important;
+    }
+    
+    .left-panel, .right-panel {
+        padding: 1rem !important;
+    }
+    
+    .chat-window {
+        padding: 0.5rem !important;
+    }
+    
+    .chat-bubble {
+        max-width: 80% !important;
+    }
+}

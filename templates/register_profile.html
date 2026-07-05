@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .bg-tropical {
+    background-image: url('/static/images/register_plantpal.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .header-bg {
+    background-color: #D1E7DD;
+  }
+  .btn-save {
+    background-color: #4a7c37;
+    color: white;
+  }
+  .btn-save:hover {
+    background-color: #2e5821;
+  }
+
+  .register-container {
+    height: 70vh !important;
+    min-height: 75vh !important;
+
+  }
+  .register-title {
+    color: #3a7124 !important;
+    margin-bottom: 0 1rem !important;
+  }
+  .form-group {
+    margin-bottom: 0.1rem !important;
+  }
+
+  .register-form label{
+    font-weight: 600 !important;
+    margin-bottom: 0.2rem !important;
+    display: block !important;
+    color: #2f5233 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-start justify-center" style="margin-top:1.5rem;"">
+  <div class="flex flex-col md:flex-row w-full max-w-4xl register-container">
+    <!-- Left Side: Tropical Image -->
+    <div class="w-full md:w-1/2 h-64 md:h-auto bg-tropical rounded-l-lg"></div>
+    
+    <!-- Right Side: Register Form -->
+    <div class="w-full md:w-1/2 p-6 bg-white shadow-lg rounded-r-lg flex">
+      <div class="w-full max-w-md space-y-6 register-form">
+        <h2 class="text-2xl font-bold register-title text-center mb-6">Your Profile</h2>
+        
+        {% if error %}
+          <p class="text-red-500 text-center mb-4">{{ error }}</p>
+        {% endif %}
+        
+        <form method="post" action="/register" class="space-y-4">
+          <div class="form-group">
+            <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input type="text" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" id="full_name" name="full_name" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <input type="email" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" id="email" name="email" placeholder="jane.doe@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" id="password" name="password" placeholder="New Password">
+          </div>
+          <div class="form-group">
+            <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <input type="password" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" id="confirm_password" name="confirm_password" placeholder="Confirm Password" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+            <input type="text" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" id="location" name="location" placeholder="City, Country" required>
+          </div>
+          <button type="submit" class="btn btn-save w-full py-1 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500" style="font-size: 1.2rem !important; width: 100% !important; box-sizing: border-box !important;">Register</button>
+          <p class="text-center text-sm text-gray-600 mt-2 login-link">
+            Already have an account? 
+            <a href="/login" class="text-green-600 hover:underline">Login Here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block title %}
+Plant Form
+{% endblock %}
+
+{% block css %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .bg-tropical {
+    background-image: url('/static/images/plant.png');
+    background-size: cover;
+    background-position: center;
+  }
+  .header-bg {
+    background-color: #D1E7DD;
+  }
+  .btn-save {
+    background-color: #4a7c37;
+    color: white;
+  }
+  .btn-save:hover {
+    background-color: #2e5821;
+  }
+
+  .register-container {
+    height: 70vh !important;
+    min-height: 75vh !important;
+
+  }
+  .register-title {
+    color: #3a7124 !important;
+    margin-bottom: 0 1rem !important;
+  }
+  .form-group {
+    margin-bottom: 0.1rem !important;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  .register-form label{
+    font-weight: 600 !important;
+    margin-bottom: 0.2rem !important;
+    display: block !important;
+    color: #2f5233 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-start justify-center">
+  <div class="flex flex-col md:flex-row w-full max-w-6xl register-container" style="margin-left: 15%;">
+    <!-- Left Side: Tropical Image -->
+    <div class="w-full md:w-1/3 h-64 md:h-auto bg-tropical rounded-l-lg"></div>
+
+    <!-- Right Side: Register Form -->
+    <div class="w-full md:w-1/2 p-6 bg-white shadow-lg rounded-r-lg flex">
+      <div class="w-full max-w-md space-y-6 register-form" style="margin: 0 5%;">
+        <h2 class="text-2xl font-bold register-title text-center mb-6">
+          {{title}}</h2>
+
+        <!-- Update your form to use the handleFormSubmit function -->
+        <form method="post" action="{{action}}" class="space-y-3" onsubmit="handleFormSubmit(event)">
+          <div class="form-group">
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input type="text" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                   id="name" name="name" placeholder="{%if plant %} {{plant.name}} {% else %} Your plant {% endif %}" {% if not plant %}required{% endif %}>
+          </div>
+          <div class="form-group">
+            <label for="species" class="block text-sm font-medium text-gray-700">Species</label>
+            <input type="text" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                   id="species" name="species" placeholder="{%if plant and plant.species %} {{plant.species}} {% else %} species {% endif %}">
+          </div>
+
+          <div class="form-group">
+            <label for="home_location" class="block text-sm font-medium text-gray-700">Home Location</label>
+            <input type="text" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                   id="home_location" name="home_location" placeholder="{%if plant %} {{plant.home_location}} {% else %} City, country {% endif %}" {% if not plant %}required{% endif %}>
+          </div>
+          <div class="form-group">
+            <label for="plant_location" class="block text-sm font-medium text-gray-700">Plant Location</label>
+            <input type="text" class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                   id="plant_location" name="plant_location" placeholder="{%if plant %} {{plant.plant_location}} {% else %} eg: Backyard {% endif %}" {% if not plant %}required{% endif %}>
+          </div>
+          <div class="form-group">
+            <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+            <textarea class="form-control w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      id="notes" name="notes" placeholder="Add any instructions.." rows="4">{% if plant and plant.notes %}{{plant.notes}}{% endif %}</textarea>
+          </div>
+          <div class="form-group" style="text-align: center;">
+            <button type="submit" class="btn btn-save w-full py-1 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  style="width: 40% !important; box-sizing: border-box !important;">💾 Save
+            </button>
+            <a class="btn w-full py-1 rounded-md focus:outline-none focus:ring-2 cancel-btn"
+                    style="width: 40% !important; box-sizing: border-box !important; margin-left: 10px;"
+            href="/dashboard">Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block jsfile %}
+<script>
+  async function handleFormSubmit(event) {
+    event.preventDefault();
+
+    // Get form element and action URL
+    const form = event.target;
+    const action = form.getAttribute('action');
+
+    // Check if this is an update (action contains /update/)
+    const isUpdate = action.includes('/update/');
+
+    // Collect form data
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name') || undefined,
+      species: formData.get('species') || undefined,
+      home_location: formData.get('home_location') || undefined,
+      plant_location: formData.get('plant_location') || undefined,
+      notes: formData.get('notes') || undefined
+    };
+
+    // For updates, only send fields that have values (optional fields)
+    if (isUpdate) {
+      Object.keys(data).forEach(key => {
+        if (!data[key] || data[key] === '') {
+          delete data[key];
+        }
+      });
+    }
+
+    try {
+      const response = await fetch(action, {
+        method: isUpdate ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      // Check if response is a redirect
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
+      if (response.ok) {
+        // Redirect to dashboard on success
+        window.location.href = '/dashboard';
+      } else {
+        const error = await response.json();
+        alert('Error: ' + (error.detail || 'Failed to save plant'));
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred: ' + error.message);
+    }
+  }
+</script>
+{% endblock %}

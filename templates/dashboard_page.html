@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+{% endblock %}
+{% block content %}
+<div class="dashboard-container">
+    <!-- Task management section - 70% width -->
+    <div class="task-overview">
+        <h2> <i class="fa-solid fa-bars-progress" style="border: 2px solid #2f5233; padding: 0.5rem; border-radius: 10px;"></i> Plant Care Task Manager</h2>
+
+        <!-- Task Statistics - Now clickable -->
+        <div class="task-stats">
+            <div class="stat-card today active" onclick="switchTaskFilter('today')">
+                <div class="stat-number">{{ task_statistics.todays_tasks | length }}</div>
+                <div class="stat-label">Today</div>
+            </div>
+            <div class="stat-card overdue" onclick="switchTaskFilter('delayed')">
+                <div class="stat-number">{{ task_statistics.delayed_tasks | length }}</div>
+                <div class="stat-label">Delayed</div>
+            </div>
+            <div class="stat-card finished" onclick="switchTaskFilter('completed')">
+                <div class="stat-number">{{ task_statistics.completed_tasks | length }}</div>
+                <div class="stat-label">Finished</div>
+            </div>
+            <div class="stat-card upcoming" onclick="switchTaskFilter('upcoming')">
+                <div class="stat-number">{{ task_statistics.upcoming_tasks | length }}</div>
+                <div class="stat-label">Upcoming</div>
+            </div>
+            <div class="stat-card new_task btn" onclick="openTaskModal()">
+                <span>+ &nbsp;</span> New Task
+            </div>
+        </div>
+
+        <!-- Show stat cards task list -->
+        <div class="task-group">
+            <!-- Default Today's Tasks -->
+            <div id="today-tasks" class="task-group" data-filter="today">
+                {% if task_statistics.todays_tasks %}
+                    <ul class="task-list">
+                        {% for task in task_statistics.todays_tasks %}
+                        <li class="task-item today">
+                            <div class="task-info">
+                                <div class="task-title">{{ task.title }} <small>({{ task.plant.name }})</small></div>
+                                <div class="task-details">
+                                    <b>Type:</b> {{ task.task_type.value }} • <b>Due:</b> {{ task.due_date.strftime('%B %d, %Y') }}
+                                    {% if task.description %}
+                                        <br>📝 {{ task.description }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn edit-btn" onclick="openTaskModal({{ task.id }})" title="Edit Task">
+                                    Update
+                                </button>
+                                <button class="btn complete-btn" onclick="completeTask({{ task.id }})" title="Complete Task">
+                                    Done
+                                </button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% elif not plants %}
+                    <div class="no-tasks">
+                        <p>📋 Please first add your plant to create task.</p>
+                    </div>
+                {% else %}
+                    <div class="no-tasks">
+                        <p>🎉 No tasks for today! Your plants are all set.</p>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Delayed Tasks -->
+            <div id="delayed-tasks" class="task-group hidden" data-filter="delayed">
+                {% if task_statistics.delayed_tasks %}
+                    <ul class="task-list">
+                        {% for task in task_statistics.delayed_tasks %}
+                        <li class="task-item overdue">
+                            <div class="task-info">
+                                <div class="task-title">{{ task.title }} <small>({{ task.plant.name }})</small></div>
+                                <div class="task-details">
+                                    <b>Type:</b> {{ task.task_type.value }} • <b>Due:</b> {{ task.due_date.strftime('%B %d, %Y') }}
+                                    {% if task.description %}
+                                        <br>📝 {{ task.description }}
+                                    {% endif %}
+                                    <span class="overdue-badge">OVERDUE</span>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn edit-btn" onclick="openTaskModal({{ task.id }})" title="Edit Task">
+                                    Update
+                                </button>
+                                <button class="btn complete-btn" onclick="completeTask({{ task.id }})" title="Complete Task">
+                                    Done
+                                </button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="no-tasks">
+                        <p>🎉 No delayed tasks! You're all caught up.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Completed Tasks -->
+            <div id="completed-tasks" class="task-group hidden" data-filter="completed">
+                {% if task_statistics.completed_tasks %}
+                    <ul class="task-list">
+                        {% for task in task_statistics.completed_tasks %}
+                        <li class="task-item completed">
+                            <div class="task-info">
+                                <div class="task-title">{{ task.title }} <small>({{ task.plant.name }})</small></div>
+                                <div class="task-details">
+                                    <b>Type:</b> {{ task.task_type.value }} • <b>Completed:</b> {{ task.completion_date.strftime('%B %d, %Y') if task.completion_date else 'Recently' }}
+                                    {% if task.description %}
+                                        <br>📝 {{ task.description }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn-icon undo-btn" onclick="completeTask({{ task.id }}, false)" title="Mark as Incomplete">
+                                    ↩️
+                                </button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="no-tasks">
+                        <p>📋 No completed tasks yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Upcoming Tasks -->
+            <div id="upcoming-tasks" class="task-group hidden" data-filter="upcoming">
+                {% if task_statistics.upcoming_tasks %}
+                    <ul class="task-list">
+                        {% for task in task_statistics.upcoming_tasks %}
+                        <li class="task-item upcoming">
+                            <div class="task-info">
+                                <div class="task-title">{{ task.title }} <small>({{ task.plant.name }})</small></div>
+                                <div class="task-details">
+                                    <b>Type:</b> {{ task.task_type.value }} • <b>Due:</b> {{ task.due_date.strftime('%B %d, %Y') }}
+                                    {% if task.description %}
+                                        <br>📝 {{ task.description }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn edit-btn" onclick="openTaskModal({{ task.id }})" title="Edit Task">
+                                    Update
+                                </button>
+                                <button class="btn complete-btn" onclick="completeTask({{ task.id }})" title="Complete Task">
+                                    Done
+                                </button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="no-tasks">
+                        <p>📅 No upcoming tasks scheduled.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal (Add/Edit) -->
+    <div id="task-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="task-modal-title">Add New Task</h2>
+                <button class="modal-close" onclick="closeTaskModal()" type="button">&times;</button>
+            </div>
+            <form id="task-form">
+                <!-- Plant and Task Type in one row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task_plant_id">Plant *</label>
+                        <select id="task_plant_id" name="plant_id" required>
+                            <option value="">Select a plant</option>
+                            {% for plant in plants %}
+                            <option value="{{ plant.id }}">{{ plant.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_type">Task Type *</label>
+                        <select id="task_type" name="task_type" required>
+                            <option value="">Select task type</option>
+                            <option value="water">💧 Water</option>
+                            <option value="fertilize">🌿 Fertilize</option>
+                            <option value="prune">✂️ Prune</option>
+                            <option value="rotate">🔄 Rotate</option>
+                            <option value="repot">🪴 Repot</option>
+                            <option value="check_health">🔍 Health Check</option>
+                            <option value="other">📋 Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Title - full width -->
+                <div class="form-row-single">
+                    <div class="form-group">
+                        <label for="task-title">Task Title *</label>
+                        <input type="text" id="task-title" name="title" placeholder="e.g., Water my fiddle leaf fig" required>
+                    </div>
+                </div>
+
+                <!-- Description - full width -->
+                <div class="form-row-single">
+                    <div class="form-group">
+                        <label for="task-description">Description (Optional)</label>
+                        <textarea id="task-description" name="description" placeholder="Add any specific instructions or notes..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Recurrence Type and Frequency in one row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="recurrence_type">Recurrence Type *</label>
+                        <select id="recurrence_type" name="recurrence_type" required>
+                            <option value="none">One-time task</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="weekend">Weekends only</option>
+                            <option value="custom">Custom interval</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="frequency_days">Frequency (days) *</label>
+                        <input type="number" id="frequency_days" name="frequency_days" min="0" max="365" placeholder="e.g., 7" required>
+                        <small style="font-size: 10px;">Auto set based on recurrence type</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn cancel-btn" onclick="closeTaskModal()">Cancel</button>
+                    <button type="submit" class="btn">💾 Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Plant section - 30% width -->
+    <div class="plant-section">
+        <div class="plant-stats">
+            <h3 style="display: flex;"> 
+                Plant Manager 
+                <a class="btn" href="/plants" style="font-size: 14px; margin-left: 5%;"><span>+</span> New Plant</a>
+            </h3>
+         
+        </div>
+        <!-- Plant List -->
+        {% if plants %}
+        <div class="plant-list">
+            {% for plant in plants %}
+            <div class="plant-item">
+                <div class="plant-info" style="display: flex;">
+                    <div class="plant-name">{{ plant.name }}
+                        <div class="plant-location">🪴 {{ plant.plant_location }}</div>
+                    </div>
+                    <div class="plant-info-btn" style="width: 30%; text-align: center;">
+                        <a class="btn complete-btn" href="/plants/update/{{plant.id}}" style="font-size: 12px; border-radius: 8px; padding: 10px;">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <a class="btn cancel-btn" href="/plants/delete/{{plant.id}}" style="font-size: 12px; border-radius: 8px; padding: 10px;">
+                            <i class="fa-solid fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+    </div>
+    <div class="no-plants">
+        🌱 No plants added yet. Add your first plant above!
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}
+{% block jsfile %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}
