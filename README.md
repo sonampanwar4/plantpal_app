@@ -54,6 +54,9 @@ plantpal_app/
 - Python 3.10+
 - PostgreSQL 12+
 - OpenAI API key
+- RAG pipeline
+- chromaDB
+- LLM API
 
 ### Installation
 
@@ -75,34 +78,12 @@ plantpal_app/
    ```
 
 4. Configure environment
-   - Copy `example.env` to `.env` and fill values:
-   ```env
-   # Database
-   db_hostname=localhost
-   db_port=5432
-   db_username=your_username
-   db_password=your_password
-   db_name=plantpal
-
-   # Security
-   secret_key=your_secret_key_here
-   algorithm=HS256
-   access_token_expire_minutes=720
-
-   # OpenAI / Embeddings
-   open_ai_key=your_openai_api_key
-   open_ai_model=gpt-4o-mini            # example
-   embedding_model=text-embedding-3-small
-   embedding_dim=1536
-
-   # Storage
-   gallery_dir=static/gallery
-   thumbnail_dir=static/gallery/thumbnails
-   ```
+   - Copy `example.env` to `.env` and fill values
 
 5. Initialize database
    ```bash
    createdb plantpal
+   alembic revision --autogenerate -m "Your migration message"
    alembic upgrade head
    ```
 
@@ -110,50 +91,6 @@ plantpal_app/
    ```bash
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
-
-7. Access
-   - UI Home: http://localhost:8000
-   - Login: http://localhost:8000/login
-   - Dashboard: http://localhost:8000/dashboard
-   - AI Chat: http://localhost:8000/ai_chat
-   - Photo Gallery: http://localhost:8000/photo_gallery
-   - API Docs: http://localhost:8000/docs
-   - ReDoc: http://localhost:8000/redoc
-
-## 📚 Endpoints
-
-### Authentication & User
-- `GET /register` - Registration form
-- `POST /register` - Register user
-- `GET /login` - Login form
-- `POST /login` - Authenticate user
-- `GET /logout` - Logout
-
-### Dashboard & Tasks (`/dashboard`)
-- `GET /dashboard/` - Dashboard page
-- `POST /dashboard/tasks` - Create care task (JSON)
-- `POST /dashboard/tasks/{task_id}/complete` - Complete task (JSON)
-- `POST /dashboard/add_plant` - Add plant (form)
-
-### Plants API (`/plants`)
-- `GET /plants/` - List current user's plants
-- `GET /plants/{plant_id}` - Get plant details
-- `PUT /plants/{plant_id}` - Update plant
-- `DELETE /plants/{plant_id}` - Delete plant
-
-### AI Chat (`/ai_chat`)
-- `GET /ai_chat` - Chat page (renders history, plants)
-- `POST /ai_chat` - Send message (supports optional photo upload; AJAX JSON supported)
-
-### Photos & Analysis
-- `GET /photo_gallery` - Photo gallery page
-- `POST /analyze_photo/{photo_id}` - Analyze a specific photo (returns JSON)
-- `DELETE /delete_photo/{photo_id}` - Delete a photo
-- `GET /photo/{photo_id}/diagnosis` - Get diagnosis JSON for a photo
-
-#### Integration Helpers
-- `GET /api/user_photos?limit=20` - List recent photos with diagnosis flags
-- `POST /api/quick_analyze` - Quick analyze most recent photo
 
 ## 🛠️ Development
 
@@ -165,11 +102,6 @@ plantpal_app/
 - **Repositories** (`repositories/`): DB CRUD and queries
 - **Templates/Static**: UI pages and assets
 
-### Database Schema (high-level)
-- `users`, `plants`, `plant_photos`
-- `care_logs`, `plant_care_tasks`, `task_completion_history`
-- `ai_logs`, `ai_responses`, `conversation_sessions`
-- `photo_diagnoses`, `photo_embeddings`, `diagnosis_feedback`
 
 ## 📄 Configuration
 
@@ -196,16 +128,7 @@ plantpal_app/
 2. Create a feature branch (`git checkout -b feature/<name>`)
 3. Commit (`git commit -m "feat: ..."`), push, open a PR
 
-### Guidelines
-- Follow PEP 8 and add type hints
-- Write docstrings and tests for new features
-- Keep routes thin; prefer services/repositories
-
-## 📄 License
-MIT (see `LICENSE`)
-
 ## 🆘 Support
-- Docs at `/docs`
 - Open issues for bugs/requests
 
 ---
